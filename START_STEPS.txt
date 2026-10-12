@@ -1,0 +1,130 @@
+================================================================================
+                    RESCUE ROVER - PROJECT START GUIDE
+================================================================================
+
+This guide provides simple, step-by-step instructions to run the Rescue Rover
+AI Telemetry Dashboard & FastAPI Backend on any computer or device.
+
+--------------------------------------------------------------------------------
+1. PREREQUISITES
+--------------------------------------------------------------------------------
+Make sure the following are installed on your device:
+
+* Git:
+    Download: https://git-scm.com/
+* Node.js (v18.0 or higher) and npm:
+    Download: https://nodejs.org/
+    Check version in terminal: node -v
+* Python (3.10 or higher) and pip:
+    Download: https://www.python.org/
+    Check version in terminal: python --version (or python3 --version)
+
+--------------------------------------------------------------------------------
+2. CLONE THE REPOSITORY
+--------------------------------------------------------------------------------
+Open a terminal / command prompt and run:
+
+    git clone https://github.com/krish1315/Rover-.git
+    cd Rover-
+
+--------------------------------------------------------------------------------
+3. CONFIGURE ENVIRONMENT FILE
+--------------------------------------------------------------------------------
+Create your local frontend environment file from the example template:
+
+* On Windows (PowerShell):
+    Copy-Item .env.example .env
+
+* On Windows (CMD):
+    copy .env.example .env
+
+* On macOS / Linux:
+    cp .env.example .env
+
+Contents of .env:
+    VITE_API_BASE_URL=http://localhost:8000
+    VITE_WS_BASE_URL=ws://localhost:8000
+
+--------------------------------------------------------------------------------
+4. START THE BACKEND (FASTAPI & SQLITE)
+--------------------------------------------------------------------------------
+Open TERMINAL 1:
+
+Step 4.1: Navigate into the backend directory
+    cd backend
+
+Step 4.2: Create a Python virtual environment (recommended)
+    python -m venv venv
+    (On macOS/Linux, if python points to 2.x, use: python3 -m venv venv)
+
+Step 4.3: Activate the virtual environment
+    * Windows (PowerShell):
+        .\venv\Scripts\Activate.ps1
+        (If you get an execution policy error, run:
+         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+         and then run .\venv\Scripts\Activate.ps1 again)
+
+    * Windows (Command Prompt):
+        venv\Scripts\activate.bat
+
+    * macOS / Linux:
+        source venv/bin/activate
+
+Step 4.4: Install Python dependencies
+    pip install -r requirements.txt
+
+Step 4.5: Start the FastAPI server
+    python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+
+Step 4.6: Verify the backend is working
+    Open your browser and visit:
+    * API Health Check:  http://127.0.0.1:8000/api/health
+    * Interactive Docs:  http://127.0.0.1:8000/docs
+    * Stored Missions:   http://127.0.0.1:8000/api/missions
+    (Note: The SQLite database file rover.db will be auto-created and seeded
+     automatically on the first startup.)
+
+--------------------------------------------------------------------------------
+5. START THE FRONTEND (REACT + VITE)
+--------------------------------------------------------------------------------
+Open TERMINAL 2 (leave Terminal 1 running):
+
+Step 5.1: Navigate to the project root directory
+    cd Rover-
+    (or if you are still in backend, run: cd ..)
+
+Step 5.2: Install frontend node dependencies
+    npm install
+
+Step 5.3: Start Vite development server
+    npm run dev
+
+Step 5.4: Access the Dashboard
+    Open your web browser and navigate to:
+    http://localhost:5173/
+
+--------------------------------------------------------------------------------
+6. SUMMARY OF PORTS & SERVICES
+--------------------------------------------------------------------------------
+* React Dashboard (Frontend):   http://localhost:5173
+* FastAPI REST API:             http://localhost:8000
+* Real-time WebSocket Stream:   ws://localhost:8000/api/ws/telemetry
+* MJPEG Camera Stream Feed:     http://localhost:8000/api/camera/stream
+* Swagger Interactive Docs:     http://localhost:8000/docs
+
+--------------------------------------------------------------------------------
+7. TROUBLESHOOTING & COMMON FIXES
+--------------------------------------------------------------------------------
+* Port 8000 already in use:
+    If another program is using port 8000, start uvicorn on another port:
+    python -m uvicorn main:app --host 127.0.0.1 --port 8080 --reload
+    and update VITE_API_BASE_URL & VITE_WS_BASE_URL in your .env file to 8080.
+
+* Port 5173 already in use:
+    Vite will automatically suggest port 5174; update your browser tab accordingly.
+
+* PowerShell script execution disabled:
+    Run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    then re-run .\venv\Scripts\Activate.ps1
+
+================================================================================
